@@ -18,7 +18,9 @@ Goal: Basic → Medium, clear speaking, resume depth.
 ## Day → Folder → File
 
 ### Day 1 — Python + Array warm-up
-- [ ] `Day01_Python_Basics/Day01_warmup.py`
+- [ ] Run `Day01_Python_Basics/Day01_python_cheatsheet.py`
+- [ ] `Day01_Python_Basics/Day01_warmup.py` (all PASS)
+- [ ] `Day01_Python_Basics/Day01_drills.py` (all PASS)
 - [ ] `Day01_02_Arrays/Day01_problems.py`
 - [ ] Speak: `Resume_Prep/INTRO.md`
 

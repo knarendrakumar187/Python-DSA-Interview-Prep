@@ -9,7 +9,7 @@
 
 | Day | Open this folder | Solve this file |
 |-----|------------------|-----------------|
-| **Day 1** | `Day01_Python_Basics` + `Day01_02_Arrays` | `Day01_warmup.py` then `Day01_problems.py` |
+| **Day 1** | `Day01_Python_Basics` + `Day01_02_Arrays` | cheatsheet → warmup → drills → `Day01_problems.py` |
 | **Day 2** | `Day01_02_Arrays` | `Day02_problems.py` |
 | **Day 3** | `Day03_Hashing` | `Day03_problems.py` |
 | **Day 4** | `Day04_Two_Pointers` | `Day04_problems.py` |
