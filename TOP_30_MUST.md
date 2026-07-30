@@ -1,5 +1,6 @@
-# Top 30 Must-Know Problems (before interview)
+# DAY 15 focus — Top 30 Must-Know Problems
 
+Use this mainly on **Day 15** (and anytime you finish early).
 Do these until you can solve without panic.
 
 ## Arrays / Hashing

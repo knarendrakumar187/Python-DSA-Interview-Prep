@@ -1,96 +1,88 @@
-# 16-Day Simple Plan → Interview Ready (15 Aug)
+# 16-Day Plan (clear day → folder map)
 
-## Your situation (honest + hopeful)
-Mock score: **5/10** · Technical: **3.3/10**  
-Feedback: *good understanding, needs more depth*
-
-You do **not** need to become a genius in 16 days.  
-You need to become **clear, calm, and deep on basics → medium**.
+Mock: **5/10** · Technical **3.3** · Feedback: *needs more depth*  
+Goal: Basic → Medium, clear speaking, resume depth.
 
 ---
 
-## Every day (same routine)
-
+## Every day routine
 | Time | Do this |
 |------|---------|
-| 2.5–3 hrs | DSA: read notes → solve 3–5 problems |
-| 45–60 min | Resume: explain 1 project deeply |
-| 45 min | One CS topic with examples |
-| 20–30 min | Speak intro / answers out loud |
+| 2.5–3 hrs | Today’s DSA folder |
+| 45–60 min | Resume depth |
+| 45 min | One CS topic |
+| 20–30 min | Speak out loud |
 
 ---
 
-## Day checklist
+## Day → Folder → File
 
 ### Day 1 — Python + Array warm-up
-- [ ] `01_Python_Basics/warmup.py`
-- [ ] `02_Arrays/day1_problems.py`
-- [ ] Speak intro (`Resume_Prep/INTRO.md`)
+- [ ] `Day01_Python_Basics/Day01_warmup.py`
+- [ ] `Day01_02_Arrays/Day01_problems.py`
+- [ ] Speak: `Resume_Prep/INTRO.md`
 
 ### Day 2 — Arrays deeper
-- [ ] `02_Arrays/day2_problems.py` (prefix sum + more)
-- [ ] Nyay Sahayak 3-min pitch
+- [ ] `Day01_02_Arrays/Day02_problems.py`
+- [ ] Nyay Sahayak 3-min pitch (`Resume_Prep/PROJECT_DEPTH.md`)
 
 ### Day 3 — Hashing
-- [ ] `03_Strings_Hashing/day3_problems.py`
-- [ ] Explain: Why RAG? Why ChromaDB?
+- [ ] `Day03_Hashing/Day03_problems.py`
+- [ ] Explain RAG + ChromaDB
 
 ### Day 4 — Two pointers
-- [ ] `04_TwoPointers_SlidingWindow/two_pointers_problems.py`
-- [ ] OOP 4 pillars with tiny Python examples
+- [ ] `Day04_Two_Pointers/Day04_problems.py`
+- [ ] OOP 4 pillars
 
 ### Day 5 — Sliding window
-- [ ] `04_TwoPointers_SlidingWindow/sliding_window_problems.py`
-- [ ] GeoVerse project pitch
+- [ ] `Day05_Sliding_Window/Day05_problems.py`
+- [ ] GeoVerse pitch
 
 ### Day 6 — Strings
-- [ ] `03_Strings_Hashing/strings_problems.py`
-- [ ] DBMS + SQL joins practice
+- [ ] `Day06_Strings/Day06_problems.py`
+- [ ] DBMS + SQL joins
 
 ### Day 7 — Stack & Queue
-- [ ] `05_Stack_Queue/problems.py`
+- [ ] `Day07_Stack_Queue/Day07_problems.py`
 - [ ] AWS pipeline pitch
 
 ### Day 8 — Linked List
-- [ ] `06_LinkedList/problems.py`
-- [ ] OS basics (process/thread, deadlock)
+- [ ] `Day08_LinkedList/Day08_problems.py`
+- [ ] OS basics
 
 ### Day 9 — Recursion
-- [ ] `07_Recursion_Backtracking/problems.py`
-- [ ] SQL: GROUP BY + HAVING
+- [ ] `Day09_Recursion/Day09_problems.py`
+- [ ] SQL GROUP BY + HAVING
 
 ### Day 10 — Sorting + Binary Search
-- [ ] `09_Sorting_Searching/problems.py`
-- [ ] Full project mock (20 min speak)
+- [ ] `Day10_Sorting_BinarySearch/Day10_problems.py`
+- [ ] Full project mock (20 min)
 
 ### Day 11 — Trees
-- [ ] `08_Trees_BST/problems.py`
-- [ ] CN basics (HTTP/HTTPS, TCP/UDP, DNS)
+- [ ] `Day11_Trees/Day11_problems.py`
+- [ ] CN basics
 
-### Day 12 — Mixed medium
-- [ ] `10_Mock_Interviews/mixed_day12.py`
-- [ ] Behavioural STAR stories
+### Day 12 — Mixed
+- [ ] `Day12_16_Mocks/Day12_mixed_problems.py`
+- [ ] Behavioural STAR (`Resume_Prep/BEHAVIOURAL.md`)
 
 ### Day 13 — Timed DSA mock
-- [ ] `10_Mock_Interviews/mock1_timed.py` (60–75 min)
+- [ ] `Day12_16_Mocks/Day13_timed_mock.py` (70 min)
 
 ### Day 14 — Full interview mock
-- [ ] Intro + DSA + Projects + CS + HR
+- [ ] `Day12_16_Mocks/Day14_FULL_MOCK_SCRIPT.md`
 
 ### Day 15 — Revise fails only
-- [ ] Re-solve only FAIL problems
 - [ ] `TOP_30_MUST.md`
 
-### Day 16 (Aug 14) — Light day
-- [ ] Intro + 1 project + top patterns
+### Day 16 — Light day
+- [ ] `CHEATSHEET.md` + intro + 1 project
 - [ ] Sleep early
 
 ---
 
-## What success looks like on interview day
-- Solve Easy problems calmly
-- Attempt Medium with clear steps
-- Explain Nyay Sahayak without panic
-- Give CS answers with examples (not only definitions)
-
-**Remember:** Depth beats speed of watching.
+## Success on interview day
+- Easy problems calm
+- Medium attempted with clear steps
+- Nyay Sahayak explained without panic
+- CS answers with examples

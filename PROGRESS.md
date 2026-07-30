@@ -1,40 +1,31 @@
-# Progress Tracker (keep it honest)
+# Progress Tracker
 
-## How to mark
-- ✅ PASS = coded yourself + can explain Time/Space
-- ❌ FAIL = revisit in 48 hours
-- ⬜ not started
+Mark only after you can explain Time & Space out loud.
 
-## Day tracker
-
-| Day | Topic | Status | Weak points |
-|-----|-------|--------|-------------|
-| 1 | Python + Arrays | ⬜ | |
-| 2 | Arrays deeper | ⬜ | |
-| 3 | Hashing | ⬜ | |
-| 4 | Two pointers | ⬜ | |
-| 5 | Sliding window | ⬜ | |
-| 6 | Strings | ⬜ | |
-| 7 | Stack/Queue | ⬜ | |
-| 8 | Linked List | ⬜ | |
-| 9 | Recursion | ⬜ | |
-| 10 | Sort + Binary Search | ⬜ | |
-| 11 | Trees | ⬜ | |
-| 12 | Mixed | ⬜ | |
-| 13 | Timed mock | ⬜ | |
-| 14 | Full mock | ⬜ | |
-| 15 | Revise fails | ⬜ | |
-| 16 | Light polish | ⬜ | |
+| Day | Folder | Status | Weak points |
+|-----|--------|--------|-------------|
+| Day 1 | `Day01_Python_Basics` + `Day01_02_Arrays` | ⬜ | |
+| Day 2 | `Day01_02_Arrays` | ⬜ | |
+| Day 3 | `Day03_Hashing` | ⬜ | |
+| Day 4 | `Day04_Two_Pointers` | ⬜ | |
+| Day 5 | `Day05_Sliding_Window` | ⬜ | |
+| Day 6 | `Day06_Strings` | ⬜ | |
+| Day 7 | `Day07_Stack_Queue` | ⬜ | |
+| Day 8 | `Day08_LinkedList` | ⬜ | |
+| Day 9 | `Day09_Recursion` | ⬜ | |
+| Day 10 | `Day10_Sorting_BinarySearch` | ⬜ | |
+| Day 11 | `Day11_Trees` | ⬜ | |
+| Day 12 | `Day12_16_Mocks` (mixed) | ⬜ | |
+| Day 13 | `Day12_16_Mocks` (timed) | ⬜ | |
+| Day 14 | Full mock script | ⬜ | |
+| Day 15 | Top 30 revise | ⬜ | |
+| Day 16 | Light polish | ⬜ | |
 
 ## Resume speaking
 | Item | Status |
 |------|--------|
-| 60-sec intro | ⬜ |
+| Day 1 intro | ⬜ |
 | Nyay Sahayak deep | ⬜ |
 | GeoVerse deep | ⬜ |
 | AWS pipeline deep | ⬜ |
-| 4 STAR stories | ⬜ |
-
-## Motivation note
-Average is fine. Consistency beats talent here.
-Do today's work. Then tomorrow's.
+| STAR stories | ⬜ |
