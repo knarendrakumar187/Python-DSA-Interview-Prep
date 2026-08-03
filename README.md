@@ -30,6 +30,7 @@ CS Core is compressed from:
 ## Folders
 | Folder | What |
 |--------|------|
+| `Python_For_DSA_Course/` | **Full Python→DSA course (Topics 01–35 + Final pack)** |
 | `Day01_Python_Basics` … `Day12_16_Mocks` | DSA by day |
 | `CS_Core/` | DBMS, OS, CN, SE, OOP (interview notes) |
 | `Resume_Prep/` | Intro, HR, projects |
