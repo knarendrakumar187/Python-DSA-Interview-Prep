@@ -1,68 +1,32 @@
 # CS Core — Simple Interview Answers
 
-Don’t give only definitions. Give **one small example**.
+Full notes are now in **`CS_Core/`** (compressed from GFG 21-day plan).
 
----
+Use this page only for ultra-short reminders.
 
 ## DBMS / SQL
-
-**Primary Key:** unique id of a row (student_id).  
-**Foreign Key:** link to another table (student_id in enrollments).
-
-**Index:** makes SELECT faster, INSERT a bit slower.  
-Example: index on email for login lookup.
-
-**JOIN example**
-```sql
-SELECT s.name, c.title
-FROM students s
-JOIN enrollments e ON s.id = e.student_id
-JOIN courses c ON c.id = e.course_id;
-```
-
-**ACID (bank transfer):** all steps succeed, or none.
-
----
-
-## OOP (Python)
-
-1. **Encapsulation:** hide data with methods  
-2. **Abstraction:** show only needed details  
-3. **Inheritance:** Child gets Parent features  
-4. **Polymorphism:** same method name, different behavior
-
-```python
-class Animal:
-    def speak(self):
-        pass
-
-class Dog(Animal):
-    def speak(self):
-        return "bark"
-```
-
----
+- PK unique row; FK links tables
+- INNER = matches only; LEFT = all left + matches
+- ACID = reliable transactions (UPI example)
+- Index = faster read, slightly slower write
 
 ## OS
-
-**Process vs Thread:**  
-Process = separate program memory.  
-Thread = lighter workers sharing memory inside a process.
-
-**Deadlock:** 4 conditions (mutual exclusion, hold&wait, no preemption, circular wait).  
-Simple example: 2 people each hold one key and wait for the other.
-
----
+- Process = own memory; Thread = shared memory workers
+- Deadlock = 4 conditions + circular wait
+- Virtual memory + page fault
 
 ## CN
+- TCP reliable; UDP fast
+- HTTPS = HTTP + TLS
+- DNS = name → IP
 
-**TCP:** reliable (files, web)  
-**UDP:** fast, less reliable (live video calls often)
+## SE
+- SDLC + Agile sprints
+- High cohesion, low coupling
+- Black box vs white box
 
-**HTTP vs HTTPS:** HTTPS = HTTP + TLS encryption  
-**DNS:** converts google.com → IP address
+## OOP
+See `CS_Core/OOP.md`
 
----
-
-## Practice style
-For every answer: **definition + tiny example + why companies care**
+## Rule
+Definition + example + why it matters.
