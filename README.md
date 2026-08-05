@@ -1,8 +1,10 @@
 # Placement Interview Prep (Python DSA + CS Core)
 **For:** Narendra Kumar · **Interview:** 15 Aug 2026
 
-> **Main plan:** [`PLAN_CATCHUP_AUG15.md`](PLAN_CATCHUP_AUG15.md) (day-wise, 3 Aug → 15 Aug)  
-> Track ticks in [`PROGRESS.md`](PROGRESS.md)
+> **Main plan (revised):** [`PLAN_CATCHUP_AUG15.md`](PLAN_CATCHUP_AUG15.md)  
+> - Starts **5 Aug** (you know Python basics → skip beginner Python grind)  
+> - **8 Aug = LIGHT day** (outside)  
+> Track: [`PROGRESS.md`](PROGRESS.md)
 
 CS Core is compressed from:  
 [GFG – Prepare CS Core Subjects for Placements](https://www.geeksforgeeks.org/blogs/prepare-cs-core-subjects-for-placements/)

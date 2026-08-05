@@ -1,43 +1,38 @@
-# Progress Tracker (3 Aug → 15 Aug)
+# Progress Tracker (Revised: 5 Aug → 15 Aug)
 
-Tick only if you can explain out loud (for DSA: Time + Space too).
-
-## Calendar progress
+You know Python basics. Focus: **DSA + CS + Resume**.  
+**8 Aug = LIGHT**
 
 | Date | Focus | DSA | CS | Resume | Notes |
 |------|--------|-----|----|--------|-------|
-| 3 Aug | Start night | ⬜ | ⬜ | ⬜ | |
-| 4 Aug | Arrays | ⬜ | ⬜ | ⬜ | |
-| 5 Aug | Hash + DBMS | ⬜ | ⬜ | ⬜ | |
-| 6 Aug | Two pointers + SQL | ⬜ | ⬜ | ⬜ | |
-| 7 Aug | Window + Strings | ⬜ | ⬜ | ⬜ | |
-| 8 Aug | Stack + Deadlock | ⬜ | ⬜ | ⬜ | |
-| 9 Aug | LL + Memory | ⬜ | ⬜ | ⬜ | |
-| 10 Aug | Recursion + BS + CN | ⬜ | ⬜ | ⬜ | |
-| 11 Aug | Trees + mixed | ⬜ | ⬜ | ⬜ | |
-| 12 Aug | Timed mock | ⬜ | ⬜ | ⬜ | |
-| 13 Aug | Full mock | ⬜ | ⬜ | ⬜ | |
-| 14 Aug | Light revise | ⬜ | ⬜ | ⬜ | |
+| 5 Aug | Restart: Arrays Day1 | ⬜ | ⬜ | ⬜ | |
+| 6 Aug | Arrays Day2 + Hash | ⬜ | ⬜ | ⬜ | |
+| 7 Aug | Two pointers + Window (load up) | ⬜ | ⬜ | ⬜ | |
+| **8 Aug** | **LIGHT (outside)** | ⬜ | ⬜ | ⬜ | intro+RAG only |
+| 9 Aug | Strings + Stack (power day) | ⬜ | ⬜ | ⬜ | |
+| 10 Aug | Linked List + OS | ⬜ | ⬜ | ⬜ | |
+| 11 Aug | Recursion + Binary Search | ⬜ | ⬜ | ⬜ | |
+| 12 Aug | Trees + CN + Mixed | ⬜ | ⬜ | ⬜ | |
+| 13 Aug | Timed mock | ⬜ | ⬜ | ⬜ | |
+| 14 Aug | Full mock + revise | ⬜ | ⬜ | ⬜ | |
 | 15 Aug | Interview | — | — | — | |
 
-## Must-speak checklist
+## Must-speak
 | Item | Status |
 |------|--------|
-| Intro Version B | ⬜ |
-| Intro Version A | ⬜ |
+| Intro B / Intro A | ⬜ / ⬜ |
 | Nyay Sahayak deep | ⬜ |
-| GeoVerse deep | ⬜ |
-| AWS deep | ⬜ |
+| GeoVerse / AWS | ⬜ / ⬜ |
 | Strength / Weakness / Why hire | ⬜ |
-| PK vs FK + JOIN + ACID | ⬜ |
-| Process vs Thread + Deadlock | ⬜ |
-| TCP vs UDP + HTTPS + DNS | ⬜ |
+| PK-FK, JOIN, ACID | ⬜ |
+| Process-Thread, Deadlock | ⬜ |
+| TCP-UDP, HTTPS, DNS | ⬜ |
 
-## Weak list (add fails here)
+## Weak list
 1.  
 2.  
 3.  
 4.  
 5.  
 
-Follow: `PLAN_CATCHUP_AUG15.md`
+Plan file: `PLAN_CATCHUP_AUG15.md`

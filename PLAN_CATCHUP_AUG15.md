@@ -1,306 +1,245 @@
-# DAY-WISE PLAN — Crack Mode (3 Aug → 15 Aug)
+# REVISED PLAN — 5 Aug → 15 Aug
+**Start fresh from today.** You already know Python basics.  
+**Skip:** long beginner Python course (`Python_For_DSA_Course` Phase 1–2)  
+**Do:** DSA patterns + CS Core + Resume depth  
+**8 Aug = LIGHT DAY** (you are outside)
 
-**You:** average student, good potential, mock said “needs more depth”  
-**Goal:** placement-ready in DSA (Easy→Medium) + CS Core + Resume  
-**Total days:** 12 practice days + interview day
-
-> Open this file every morning. Tick boxes. Don’t invent your own syllabus.
-
----
-
-## Golden rules (read once)
-1. **DSA first**, CS second, Resume third  
-2. If stuck >20 min → write brute force → then check solution → **rewrite yourself**  
-3. Every solved problem: say **Time + Space** out loud  
-4. Missed a day? Do **50% of missed + full today** (don’t skip ahead randomly)  
-5. Sleep 7 hours. Tired brain fails interviews.
+Interview: **15 Aug** · Practice days left: **~9 solid + 1 light**
 
 ---
 
-## Daily timetable (pick one)
+## New strategy (simple)
+| Priority | What | Why |
+|----------|------|-----|
+| 1 | DSA Easy → Medium | technical score was weak |
+| 2 | Resume / projects depth | mock said needs depth |
+| 3 | CS Core (DBMS/OS/CN) | always asked |
+| Optional | Python Phase 3 only if stuck on syntax | you already know basics |
 
-### Option A — College day (~4 hrs)
-| When | Minutes | Block |
-|------|---------|--------|
-| Morning / free slot | 90 | DSA coding |
-| Afternoon / evening | 60 | DSA continue |
-| Evening | 45 | CS Core + speak |
-| Night | 30 | Resume / intro / project |
-| Night end | 10 | Tick this plan + note weak point |
-
-### Option B — Free day (~5.5 hrs)
-| When | Minutes | Block |
-|------|---------|--------|
-| Session 1 | 150 | DSA |
-| Break | 20 | walk / water |
-| Session 2 | 60 | CS Core |
-| Session 3 | 45 | Resume depth |
-| Session 4 | 30 | Revise yesterday fails |
+**Daily time (normal days): ~4 hrs**  
+**8 Aug: ~45–60 min max (phone-friendly)**
 
 ---
 
-## PHASE 1 — Foundation (3–6 Aug)
-**Target:** Python fluency + Arrays/Hash/Two pointers + DBMS base
-
-### Mon 3 Aug — START NIGHT (lighter)
-**Theme:** Restart without overwhelm  
-**DSA (60–90 min)**
-- [ ] Run `Day01_Python_Basics/Day01_python_cheatsheet.py`
-- [ ] Solve `Day01_Python_Basics/Day01_warmup.py` → all PASS
-- [ ] If energy left: start `Day01_drills.py` (2–3 functions only)
-
-**CS (20–30 min)**
-- [ ] `CS_Core/DBMS_SQL/01_basics.md`
-- [ ] Speak 60 sec: Primary key vs Foreign key
-
-**Resume (10–15 min)**
-- [ ] Speak Intro **Version B** once (`Resume_Prep/INTRO.md` or PDF)
-
-**Done when:** warmup all PASS + intro spoken once
+## Daily timetable (normal days)
+| Block | Time | What |
+|-------|------|------|
+| DSA | 2–2.5 hrs | today’s problems |
+| CS | 40–45 min | today’s CS file + speak |
+| Resume | 25–35 min | intro / project / HR |
+| Close | 5 min | tick `PROGRESS.md` |
 
 ---
 
-### Tue 4 Aug — Arrays Day
-**Theme:** Array patterns + SQL joins  
-**DSA (2–2.5 hrs)**
-- [ ] Finish `Day01_drills.py` → all PASS
-- [ ] `Day01_02_Arrays/Day01_problems.py` (all 5)
-- [ ] Start `Day02_problems.py` (at least 2)
+## Calendar
 
-**CS (45 min)**
-- [ ] `CS_Core/DBMS_SQL/02_sql_joins.md`
-- [ ] Write on paper: INNER JOIN + LEFT JOIN queries
+### Wed 5 Aug — START TONIGHT (catch-up start)
+**Goal:** restart without panic  
+**DSA (90–120 min)**
+- [ ] Skim only: `Day01_Python_Basics/Day01_python_cheatsheet.py` (10 min)
+- [ ] `Day01_02_Arrays/Day01_problems.py` → finish all
+- [ ] If time: start `Day02_problems.py` (1–2 problems)
 
-**Resume (25 min)**
-- [ ] Intro **Version A** full (timer under 2 min)
-- [ ] Read Nyay Sahayak pitch once
+**CS (25 min)**
+- [ ] `CS_Core/DBMS_SQL/01_basics.md` — speak PK vs FK
 
-**Done when:** Day01 arrays PASS + can explain JOIN with example
+**Resume (15 min)**
+- [ ] Intro **Version B** once (`Resume_Prep/INTRO.md`)
+
+**Done when:** Day01 arrays mostly PASS + intro spoken
 
 ---
 
-### Wed 5 Aug — Hashing + DBMS depth
-**Theme:** dict/set fluency  
-**DSA (2–2.5 hrs)**
+### Thu 6 Aug — Arrays + Hashing + SQL joins
+**DSA (2.5 hrs)**
 - [ ] Finish `Day02_problems.py`
 - [ ] `Day03_Hashing/Day03_problems.py` (all)
 
-**CS (45–60 min)**
-- [ ] `CS_Core/DBMS_SQL/03_normalization_acid.md`
-- [ ] Speak ACID with UPI example (60–90 sec)
+**CS (45 min)**
+- [ ] `CS_Core/DBMS_SQL/02_sql_joins.md`
+- [ ] Write INNER + LEFT JOIN on paper
 
 **Resume (30 min)**
-- [ ] Nyay Sahayak 3-min architecture (`Resume_Prep/PROJECT_DEPTH.md`)
-- [ ] Practice: What is RAG? Why ChromaDB?
+- [ ] Intro **Version A** (under 2 min)
+- [ ] Nyay Sahayak 3-min pitch start
 
-**Done when:** hashing problems PASS + RAG explanation clear
+**Done when:** Two Sum + hashing fluent
 
 ---
 
-### Thu 6 Aug — Two Pointers + SQL practice
-**Theme:** pointer skill + write SQL  
-**DSA (2–2.5 hrs)**
+### Fri 7 Aug — Two pointers + Window + DBMS depth
+**DSA (2.5–3 hrs)** *(load extra because 8th is light)*
 - [ ] `Day04_Two_Pointers/Day04_problems.py` (all)
-- [ ] Start `Day05_Sliding_Window/Day05_problems.py` (1–2 problems)
+- [ ] `Day05_Sliding_Window/Day05_problems.py` (all if possible, at least 3)
 
-**CS (45–60 min)**
-- [ ] `CS_Core/DBMS_SQL/04_sql_practice.md` (write all queries)
-- [ ] `CS_Core/OOP.md` (speak 4 pillars)
+**CS (45 min)**
+- [ ] `CS_Core/DBMS_SQL/03_normalization_acid.md`
+- [ ] Speak ACID (UPI example)
 
-**Resume (20 min)**
-- [ ] Strength + Weakness once (`Resume_Prep/BEHAVIOURAL.md`)
+**Resume (25 min)**
+- [ ] Nyay Sahayak: RAG + difficulties
+- [ ] Strength answer once
 
-**Done when:** two-pointers PASS + 4 SQL queries written without peeking
-
-**Checkpoint (end of Phase 1):**  
-If Day01–Day04 DSA feels impossible, repeat fails on Fri morning before new topics.
+**Done when:** two pointers + at least 3 window problems done
 
 ---
 
-## PHASE 2 — Core patterns (7–10 Aug)
-**Target:** Window, Stack, LL, Recursion, Binary Search + OS/CN start
+### Sat 8 Aug — LIGHT DAY (outside) 🌤️
+**Max 45–60 min. Phone / notes only. NO heavy coding.**
 
-### Fri 7 Aug — Sliding Window + Strings
-**DSA (2.5 hrs)**
-- [ ] Finish `Day05_Sliding_Window/Day05_problems.py`
+**Do ONLY this:**
+- [ ] Speak Intro Version B once (2 min)
+- [ ] Speak: What is RAG? (1 min)
+- [ ] Read quickly on phone:
+  - `CS_Core/OOP.md` (4 pillars)
+  - OR PDF: `Resume_Prep/Narendra_Interview_Intro.pdf`
+- [ ] Revise mentally: Two Sum approach + Valid Parentheses idea
+- [ ] Optional (10 min): 1 Easy problem only if free time
+
+**Do NOT:**
+- Start new big topics
+- Watch long videos
+- Stress about missing DSA today
+
+**Done when:** intro + RAG spoken once
+
+---
+
+### Sun 9 Aug — Catch-up power day
+**Goal:** cover what 8th skipped + Strings/Stack  
+**DSA (3 hrs)**
+- [ ] Finish remaining Day05 window problems (if any)
 - [ ] `Day06_Strings/Day06_problems.py`
+- [ ] `Day07_Stack_Queue/Day07_problems.py` (at least Valid Parentheses + 1 more)
+
+**CS (45 min)**
+- [ ] `CS_Core/DBMS_SQL/04_sql_practice.md` (write queries)
+- [ ] Quick `CS_Core/OOP.md` if not done on 8th
+
+**Resume (30 min)**
+- [ ] GeoVerse pitch
+- [ ] Weakness + Why hire you
+
+**Done when:** Valid Parentheses confident
+
+---
+
+### Mon 10 Aug — Linked List + OS
+**DSA (2.5 hrs)**
+- [ ] Finish Day07 if pending
+- [ ] `Day08_LinkedList/Day08_problems.py` (all)
 
 **CS (45 min)**
 - [ ] `CS_Core/OS/01_process_thread.md`
-- [ ] Speak: Process vs Thread
+- [ ] `CS_Core/OS/02_sync_deadlock.md` (at least deadlock 4 conditions)
 
 **Resume (25 min)**
-- [ ] GeoVerse pitch + 2 difficulties
+- [ ] AWS pipeline pitch
+- [ ] STAR: hardest bug
 
-**Done when:** window + strings mostly PASS + process/thread clear
-
----
-
-### Sat 8 Aug — Stack & Queue (heavier day)
-**DSA (3 hrs)**
-- [ ] `Day07_Stack_Queue/Day07_problems.py` (all)
-- [ ] Re-solve yesterday’s FAIL problems (30–40 min)
-
-**CS (45–60 min)**
-- [ ] `CS_Core/OS/02_sync_deadlock.md`
-- [ ] Speak deadlock 4 conditions + real example
-
-**Resume (30 min)**
-- [ ] AWS Intelligence Loop pitch + latency honesty
-- [ ] Why hire you? (short + full)
-
-**Done when:** Valid Parentheses confident without notes
+**Done when:** reverse LL + cycle detection explained
 
 ---
 
-### Sun 9 Aug — Linked List + Recursion start
-**DSA (3 hrs)**
-- [ ] `Day08_LinkedList/Day08_problems.py` (all)
-- [ ] Start `Day09_Recursion/Day09_problems.py` (factorial, fib, subsets attempt)
-
-**CS (45 min)**
-- [ ] `CS_Core/OS/03_memory.md`
-- [ ] Speak: Virtual memory + page fault
-
-**Resume (20 min)**
-- [ ] One STAR story (hardest bug in Nyay Sahayak)
-
-**Done when:** reverse LL + middle/cycle explained while drawing
-
----
-
-### Mon 10 Aug — Recursion finish + Binary Search
+### Tue 11 Aug — Recursion + Binary Search + OS memory
 **DSA (2.5–3 hrs)**
-- [ ] Finish `Day09_Recursion/Day09_problems.py`
-- [ ] `Day10_Sorting_BinarySearch/Day10_problems.py` (all)
+- [ ] `Day09_Recursion/Day09_problems.py`
+- [ ] `Day10_Sorting_BinarySearch/Day10_problems.py`
 
-**CS (45 min)**
-- [ ] `CS_Core/CN/01_basics.md`
-- [ ] Speak: HTTP vs HTTPS + DNS + URL flow
+**CS (40 min)**
+- [ ] `CS_Core/OS/03_memory.md`
+- [ ] Speak page fault / virtual memory
 
 **Resume (20 min)**
-- [ ] Intro Version A + Version B once each (polish)
+- [ ] Full behavioural once (all main answers)
 
-**Done when:** binary search template memorized
+**Done when:** binary search template from memory
 
 ---
 
-## PHASE 3 — Interview mode (11–14 Aug)
-**Target:** Trees, mocks, revise, confidence
-
-### Tue 11 Aug — Trees + CN
+### Wed 12 Aug — Trees + CN + Mixed
 **DSA (2.5 hrs)**
-- [ ] `Day11_Trees/Day11_problems.py` (all)
+- [ ] `Day11_Trees/Day11_problems.py`
 - [ ] `Day12_16_Mocks/Day12_mixed_problems.py`
 
 **CS (45 min)**
-- [ ] `CS_Core/CN/02_transport_ip.md`
-- [ ] Speak: TCP vs UDP with examples
+- [ ] `CS_Core/CN/01_basics.md`
+- [ ] `CS_Core/CN/02_transport_ip.md` (TCP vs UDP)
+
+**Resume (20 min)**
+- [ ] Intro A + Nyay once (polish)
+
+**Done when:** tree depth + invert coded once
+
+---
+
+### Thu 13 Aug — Timed mock + SE
+**DSA**
+- [ ] `Day13_timed_mock.py` — timer **70 min**
+- [ ] Review fails 40 min (rewrite)
+
+**CS (30–40 min)**
+- [ ] `CS_Core/Software_Engineering/01_basics.md`
 
 **Resume (25 min)**
-- [ ] All behavioural answers once (strength/weakness/hire/3–5 years)
+- [ ] Project grill 15 continuous minutes
 
-**Done when:** max depth + invert tree can code from memory
-
----
-
-### Wed 12 Aug — Timed DSA mock
-**DSA (70–90 min timed + review)**
-- [ ] `Day12_16_Mocks/Day13_timed_mock.py` with timer (70 min)
-- [ ] Review mistakes 30–40 min (rewrite fails)
-
-**CS (40 min)**
-- [ ] `CS_Core/Software_Engineering/01_basics.md`
-- [ ] Speak: Agile vs Waterfall + cohesion/coupling
-
-**Resume (30 min)**
-- [ ] Full project grill: Nyay + GeoVerse + AWS (15–20 min continuous speaking)
-
-**Done when:** mock finished under time pressure (score doesn’t matter today)
+**Done when:** timed mock finished (score secondary)
 
 ---
 
-### Thu 13 Aug — Full mock interview day
-**Use:** `Day12_16_Mocks/Day14_FULL_MOCK_SCRIPT.md`  
-**Schedule (75–90 min total)**
-- [ ] Intro (2 min)
-- [ ] DSA 2 problems (30–35 min)
-- [ ] Project grill (15–20 min)
-- [ ] CS quick fire (10 min) from `CS_Core/QUICK_REVISE.md`
-- [ ] HR (5–8 min)
+### Fri 14 Aug — Full mock + light revise
+**Morning / main block (75–90 min)**
+- [ ] `Day14_FULL_MOCK_SCRIPT.md` full run
 
-**After mock (45–60 min)**
-- [ ] Write top 5 weak answers
-- [ ] Fix those 5 same day
-
-**Done when:** full mock completed once + 5 fixes written
-
----
-
-### Fri 14 Aug — Light polish (NO new topics)
-**DSA (90 min max)**
-- [ ] Only FAIL problems from `TOP_30_MUST.md`
-- [ ] Skim `CHEATSHEET.md`
-
-**CS (30 min)**
-- [ ] `CS_Core/QUICK_REVISE.md` flash only
-
-**Resume (30 min)**
-- [ ] Intro once
-- [ ] Nyay Sahayak once
-- [ ] Strength / Why hire you once
+**Afternoon (60–90 min)**
+- [ ] Fix top 5 weak answers
+- [ ] `TOP_30_MUST.md` — only FAIL ones
+- [ ] `CS_Core/QUICK_REVISE.md` flash
+- [ ] Intro + Nyay + Why hire you once
 
 **Night**
-- [ ] Keep bag/documents ready
-- [ ] Sleep early (before 11)
+- [ ] Sleep early
 
-**Done when:** calm, not exhausted
-
----
-
-### Sat 15 Aug — INTERVIEW DAY
-- [ ] Light breakfast
-- [ ] 10 min: intro + one project only (no new coding)
-- [ ] Reach early
-- [ ] In interview: clarify → example → approach → code → complexity
+**No new topics.**
 
 ---
 
-## Weekly scoreboard (be honest)
-
-| Week | Dates | Must finish | Your mark |
-|------|-------|-------------|-----------|
-| W1 | 3–6 Aug | Python + Arrays + Hash + Two pointers + DBMS | ⬜ |
-| W2 | 7–10 Aug | Window/Stack/LL/Recursion/BS + OS + CN start | ⬜ |
-| W3 | 11–14 Aug | Trees + mocks + revise | ⬜ |
+### Sat 15 Aug — INTERVIEW
+- [ ] 10 min only: Intro + Nyay Sahayak
+- [ ] No new coding
+- [ ] Stay calm: Clarify → Example → Approach → Code → Complexity
 
 ---
 
-## If you fall behind (emergency rules)
-| Situation | Do this |
-|-----------|---------|
-| Missed 1 day | Next day: 1 hr catch-up fails + full today |
-| Missed 2 days | Skip SE deep notes; keep DSA + DBMS/OS |
-| Too many fails | Stop new topics for half day; only rewrite fails |
-| Panic before interview | Only intro + Nyay + Top 10 patterns |
+## What to SKIP (saves time)
+- Full `Python_For_DSA_Course` Phase 1–2 (you know basics)
+- System Design deep course
+- Hard LeetCode
+- GenAI theory binge
+- Long YouTube playlists
 
-**Never do:** start System Design course / Hard LeetCode / random YouTube binge.
-
----
-
-## Daily end note (copy to notebook)
-Date: ____  
-Solved: ____  
-Failed: ____  
-One thing I’ll revise tomorrow: ____  
+## Optional only if syntax stuck
+Open one file from `Python_For_DSA_Course/Phase3_DSA_Essentials/`  
+(Counter, deque, enumerate) — 15 min max
 
 ---
 
-## Success definition for Aug 15
-- Easy DSA: calm and correct  
-- Medium DSA: clear approach even if partial code  
-- CS: example-based answers (DBMS/OS/CN)  
-- Resume: Nyay Sahayak depth without freezing  
-- HR: natural strength/weakness/why hire you  
+## Emergency if you fall behind
+| Missed | Action |
+|--------|--------|
+| 1 day | Next day: 1 hr fails + full today |
+| Heavy fails | Half day rewrite fails only |
+| Panic on 14th | Intro + Nyay + Top patterns only |
 
-**Start now with 3 Aug checklist.** Tick as you go.
+---
+
+## Success bar for 15 Aug
+- Easy DSA calm
+- Medium DSA: clear approach
+- CS answers with examples
+- Nyay Sahayak depth without freeze
+- Natural HR answers
+
+**Start now with 5 Aug checklist.**  
+Tick boxes in [`PROGRESS.md`](PROGRESS.md)
