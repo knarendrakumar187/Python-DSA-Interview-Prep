@@ -1,340 +1,545 @@
+"""Build a polished interview effort tracker Excel for Narendra (13-16 Aug)."""
+
 from openpyxl import Workbook
-from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+from openpyxl.styles import Font, PatternFill, Alignment, Border, Side, NamedStyle
 from openpyxl.utils import get_column_letter
 from openpyxl.worksheet.datavalidation import DataValidation
+from openpyxl.formatting.rule import FormulaRule, CellIsRule
+from openpyxl.chart import DoughnutChart, Reference
 from pathlib import Path
 
 wb = Workbook()
 
-header_fill = PatternFill("solid", fgColor="0F2C59")
-header_font = Font(bold=True, color="FFFFFF", size=11, name="Calibri")
-title_font = Font(bold=True, size=14, color="0F2C59", name="Calibri")
-must_fill = PatternFill("solid", fgColor="FCE4D6")
-lite_fill = PatternFill("solid", fgColor="FFF2CC")
-blue_fill = PatternFill("solid", fgColor="DDEBF7")
+# ----- Theme -----
+NAVY = "0F2C59"
+TEAL = "1F6F5B"
+ORANGE = "C65911"
+GREEN = "006100"
+RED = "9C0006"
+GRAY = "333333"
+LIGHT_NAVY = "D6E3F0"
+LIGHT_TEAL = "E2F0EA"
+LIGHT_ORANGE = "FCE4D6"
+LIGHT_GREEN = "C6EFCE"
+LIGHT_YELLOW = "FFF2CC"
+LIGHT_RED = "FFC7CE"
+WHITE = "FFFFFF"
+ROW_ALT = "F8FAFC"
+
 thin = Border(
-    left=Side(style="thin", color="B0B0B0"),
-    right=Side(style="thin", color="B0B0B0"),
-    top=Side(style="thin", color="B0B0B0"),
-    bottom=Side(style="thin", color="B0B0B0"),
+    left=Side(style="thin", color="D0D7E2"),
+    right=Side(style="thin", color="D0D7E2"),
+    top=Side(style="thin", color="D0D7E2"),
+    bottom=Side(style="thin", color="D0D7E2"),
 )
-wrap = Alignment(wrap_text=True, vertical="center")
-center = Alignment(wrap_text=True, vertical="center", horizontal="center")
+thick_bottom = Border(bottom=Side(style="medium", color=NAVY))
+
+fill_navy = PatternFill("solid", fgColor=NAVY)
+fill_teal = PatternFill("solid", fgColor=TEAL)
+fill_orange = PatternFill("solid", fgColor=LIGHT_ORANGE)
+fill_green = PatternFill("solid", fgColor=LIGHT_GREEN)
+fill_yellow = PatternFill("solid", fgColor=LIGHT_YELLOW)
+fill_blue = PatternFill("solid", fgColor=LIGHT_NAVY)
+fill_alt = PatternFill("solid", fgColor=ROW_ALT)
+fill_white = PatternFill("solid", fgColor=WHITE)
+fill_card = PatternFill("solid", fgColor="EEF4FA")
+
+font_title = Font(name="Calibri", bold=True, size=16, color=NAVY)
+font_h = Font(name="Calibri", bold=True, size=11, color=WHITE)
+font_sub = Font(name="Calibri", italic=True, size=10, color="555555")
+font_body = Font(name="Calibri", size=10, color=GRAY)
+font_bold = Font(name="Calibri", bold=True, size=11, color=NAVY)
+font_kpi = Font(name="Calibri", bold=True, size=18, color=TEAL)
+font_small = Font(name="Calibri", size=9, color="666666")
+
+align_c = Alignment(horizontal="center", vertical="center", wrap_text=True)
+align_l = Alignment(horizontal="left", vertical="center", wrap_text=True)
 
 
-def autosize(ws, widths):
+def width(ws, widths):
     for i, w in enumerate(widths, 1):
         ws.column_dimensions[get_column_letter(i)].width = w
 
 
-def add_status_dv(ws, col, max_row, options='"Not Started,In Progress,Done"'):
+def header_row(ws, row, headers, fill=fill_navy):
+    for c, h in enumerate(headers, 1):
+        cell = ws.cell(row, c, h)
+        cell.fill = fill
+        cell.font = font_h
+        cell.alignment = align_c
+        cell.border = thin
+
+
+def style_cells(ws, r, cols, alt=False):
+    for c in range(1, cols + 1):
+        cell = ws.cell(r, c)
+        cell.border = thin
+        cell.font = font_body
+        cell.alignment = align_c if c not in (4, 9, 3) else align_l
+        if alt and cell.fill.fgColor is None or (alt and getattr(cell.fill.fgColor, "rgb", None) in (None, "00000000")):
+            pass
+    if alt:
+        for c in range(1, cols + 1):
+            if ws.cell(r, c).fill.fgColor is None or str(getattr(ws.cell(r, c).fill.fgColor, "rgb", "")) in ("00000000", "None"):
+                ws.cell(r, c).fill = fill_alt
+
+
+def dv_list(ws, ref, options):
     dv = DataValidation(type="list", formula1=options, allow_blank=True)
+    dv.error = "Choose from dropdown"
+    dv.errorTitle = "Invalid"
     ws.add_data_validation(dv)
-    dv.add(f"{col}2:{col}{max_row}")
+    dv.add(ref)
 
 
-# -------------------- 00 Read me --------------------
-ws0 = wb.active
-ws0.title = "00_Read_Me_First"
-ws0["A1"] = "HOW TO USE THIS SHEET — NARENDRA INTERVIEW EFFORT TRACKER"
-ws0["A1"].font = title_font
-lines = [
-    "",
-    "Interview Date: 16 Aug 2026",
-    "This Excel is your ONLY checklist for the next 3 days. Do not invent new syllabus.",
-    "",
-    "SHEETS:",
-    "1) 01_Master_Plan_13to16  -> main day-wise tasks. Change Status dropdown to Done.",
-    "2) 02_DSA_Must_Problems   -> 12 key problems. Write brute + optimal. Mark coded/explain.",
-    "3) 03_Resume_HR_Speak     -> speak out loud. Mark Yes when you can do without notes.",
-    "4) 04_CS_Core_Flash       -> short CS answers with examples.",
-    "5) 05_Interview_Day_16    -> use only on interview morning.",
-    "",
-    "EFFORT RULES:",
-    "- Mark Done only if you can explain out loud (not if you only read).",
-    "- For every DSA problem: Brute idea + Optimal code + Time/Space.",
-    "- Target before 16 Aug morning: finish almost all MUST rows.",
-    "",
-    "LOCAL FOLDER:",
-    r"E:\sems\sem 7\Python DSA",
-    "Intro PDF: Resume_Prep\\Narendra_Interview_Intro.pdf",
-    "HR PDF: Resume_Prep\\Narendra_Interview_Behavioural.pdf",
-    "GitHub: https://github.com/knarendrakumar187/Python-DSA-Interview-Prep",
-    "",
-    "START NOW: open sheet 01_Master_Plan_13to16 and do Task #1 (Two Sum).",
-    "Mindset: You do not need perfection. You need calm clarity + honest effort.",
+def banner(ws, title, subtitle, merge="A1:J1"):
+    ws.merge_cells(merge)
+    ws["A1"] = title
+    ws["A1"].font = font_title
+    ws["A1"].alignment = Alignment(vertical="center", horizontal="left")
+    ws.row_dimensions[1].height = 28
+    a2, b2 = merge.split(":")[0][0] + "2", merge.split(":")[1][0] + "2"
+    ws.merge_cells(f"A2:{merge.split(':')[1][0]}2")
+    ws["A2"] = subtitle
+    ws["A2"].font = font_sub
+    ws.row_dimensions[2].height = 18
+
+
+# ========================= 00 DASHBOARD =========================
+ws = wb.active
+ws.title = "00_Dashboard"
+banner(
+    ws,
+    "NARENDRA KUMAR — INTERVIEW COMMAND CENTER",
+    "Interview: 16 Aug 2026  |  Effort window: 13–15 Aug  |  Goal: Perform better with depth (not perfection)",
+    "A1:H1",
+)
+
+# KPI cards labels
+kpis = [
+    (4, "A", "B", "Overall Done", "=COUNTIF('01_Master_Plan'!H5:H37,\"Done\")&\" / 33\""),
+    (4, "C", "D", "DSA Done", "=COUNTIF('02_DSA_Problems'!H4:H15,\"Done\")&\" / 12\""),
+    (4, "E", "F", "Resume Speak Done", "=COUNTIF('03_Resume_HR'!F4:F14,\"Done\")&\" / 11\""),
+    (4, "G", "H", "CS Flash Done", "=COUNTIF('04_CS_Core'!F4:F17,\"Done\")&\" / 14\""),
 ]
-for i, line in enumerate(lines, 2):
-    ws0.cell(i, 1, line)
-ws0.column_dimensions["A"].width = 115
 
-# -------------------- 01 Master plan --------------------
-ws1 = wb.create_sheet("01_Master_Plan_13to16")
-ws1["A1"] = "NARENDRA — INTERVIEW EMERGENCY PLAN (13 Aug night → 16 Aug)"
-ws1["A1"].font = title_font
-ws1.merge_cells("A1:I1")
-ws1["A2"] = "Goal: Perform better (not perfect) | Formula: Clarify → Example → Brute → Better → Code → Time/Space"
-ws1["A2"].font = Font(italic=True, size=10, color="333333")
-ws1.merge_cells("A2:I2")
+# Manual KPI layout
+ws["A4"] = "OVERALL PROGRESS"
+ws["A4"].font = font_bold
+ws.merge_cells("A4:B4")
+ws["A5"] = '=COUNTIF(\'01_Master_Plan\'!H5:H37,"Done")'
+ws["B5"] = '/ 33 tasks'
+ws["A5"].font = font_kpi
+ws["A6"] = '=IFERROR(ROUND(COUNTIF(\'01_Master_Plan\'!H5:H37,"Done")/33*100,0)&"% complete","0%")'
+ws["A6"].font = Font(name="Calibri", bold=True, size=12, color=ORANGE)
 
-headers1 = ["#", "Date", "Time Block", "Task", "Category", "Priority", "Est. Min", "Status", "Notes / Proof"]
-for c, h in enumerate(headers1, 1):
-    cell = ws1.cell(3, c, h)
-    cell.fill = header_fill
-    cell.font = header_font
-    cell.alignment = center
-    cell.border = thin
+ws["C4"] = "DSA PROBLEMS"
+ws["C4"].font = font_bold
+ws.merge_cells("C4:D4")
+ws["C5"] = '=COUNTIF(\'02_DSA_Problems\'!H4:H15,"Done")'
+ws["D5"] = "/ 12"
+ws["C5"].font = font_kpi
+ws["C6"] = '=IFERROR(ROUND(COUNTIF(\'02_DSA_Problems\'!H4:H15,"Done")/12*100,0)&"%","0%")'
+ws["C6"].font = Font(name="Calibri", bold=True, size=12, color=ORANGE)
+
+ws["E4"] = "RESUME / HR"
+ws["E4"].font = font_bold
+ws.merge_cells("E4:F4")
+ws["E5"] = '=COUNTIF(\'03_Resume_HR\'!F4:F14,"Done")'
+ws["F5"] = "/ 11"
+ws["E5"].font = font_kpi
+ws["E6"] = '=IFERROR(ROUND(COUNTIF(\'03_Resume_HR\'!F4:F14,"Done")/11*100,0)&"%","0%")'
+ws["E6"].font = Font(name="Calibri", bold=True, size=12, color=ORANGE)
+
+ws["G4"] = "CS CORE"
+ws["G4"].font = font_bold
+ws.merge_cells("G4:H4")
+ws["G5"] = '=COUNTIF(\'04_CS_Core\'!F4:F17,"Done")'
+ws["H5"] = "/ 14"
+ws["G5"].font = font_kpi
+ws["G6"] = '=IFERROR(ROUND(COUNTIF(\'04_CS_Core\'!F4:F17,"Done")/14*100,0)&"%","0%")'
+ws["G6"].font = Font(name="Calibri", bold=True, size=12, color=ORANGE)
+
+for col in ["A", "C", "E", "G"]:
+    for r in range(4, 7):
+        ws[f"{col}{r}"].fill = fill_card
+        ws[f"{col}{r}"].border = thin
+        ws[f"{chr(ord(col)+1)}{r}"].fill = fill_card
+        ws[f"{chr(ord(col)+1)}{r}"].border = thin
+
+ws["A8"] = "TODAY FOCUS (read this first)"
+ws["A8"].font = font_bold
+ws.merge_cells("A8:H8")
+
+focus = [
+    ["Date", "Priority Focus", "Hours", "Must Finish Before Sleep"],
+    ["Thu 13 Aug (Tonight)", "4 DSA + Intro B + Nyay + PK/FK + Process/Thread", "2.5–3 hrs", "Two Sum, Duplicate, Stock, Parentheses + Intro spoken"],
+    ["Fri 14 Aug (Main Day)", "Window/LL/BS/Tree + CS flash + full resume speak", "4–5 hrs", "Reverse LL, Binary Search, Tree depth + HR answers"],
+    ["Sat 15 Aug (Polish)", "Fails only + Full mock + sleep early", "3–4 hrs", "Full mock done + no new topics"],
+    ["Sun 16 Aug (Interview)", "Intro + Nyay only (15 min). Stay calm.", "light", "Clarify→Example→Brute→Better→Code→Complexity"],
+]
+header_row(ws, 9, focus[0], fill_teal)
+for i, row in enumerate(focus[1:], 10):
+    for c, val in enumerate(row, 1):
+        cell = ws.cell(i, c, val)
+        cell.border = thin
+        cell.font = font_body
+        cell.alignment = align_l if c > 1 else align_c
+        if i % 2 == 0:
+            cell.fill = fill_alt
+    ws.row_dimensions[i].height = 34
+ws.merge_cells("B10:B10")
+
+ws["A15"] = "HOW TO USE (simple)"
+ws["A15"].font = font_bold
+tips = [
+    "1. Work mainly in sheet 01_Master_Plan — mark Status = Done only if you can explain out loud.",
+    "2. For every DSA problem: write Brute idea + Optimal idea, then code Optimal.",
+    "3. Orange Priority = MUST. Do MUST before SHOULD.",
+    "4. Use 03_Resume_HR for speaking practice. Record yourself once.",
+    "5. Do not add random YouTube topics. This sheet is enough for a fresher technical round baseline.",
+    "6. Target before interview morning: Overall >= 75% Done.",
+]
+for i, t in enumerate(tips, 16):
+    ws.cell(i, 1, t).font = font_body
+    ws.merge_cells(start_row=i, start_column=1, end_row=i, end_column=8)
+
+ws["A23"] = "FILE PATHS"
+ws["A23"].font = font_bold
+ws["A24"] = r"Local folder: E:\sems\sem 7\Python DSA"
+ws["A25"] = r"Intro PDF: Resume_Prep\Narendra_Interview_Intro.pdf"
+ws["A26"] = r"HR PDF: Resume_Prep\Narendra_Interview_Behavioural.pdf"
+ws["A27"] = "GitHub: https://github.com/knarendrakumar187/Python-DSA-Interview-Prep"
+for r in range(24, 28):
+    ws.cell(r, 1).font = font_small
+    ws.merge_cells(start_row=r, start_column=1, end_row=r, end_column=8)
+
+ws["A29"] = "MINDSET"
+ws["A29"].font = font_bold
+ws["A30"] = "You are not behind forever. You are 3 focused days away from a clearer interview. Depth > panic. Start Task #1 now."
+ws["A30"].font = Font(name="Calibri", italic=True, size=11, color=TEAL)
+ws.merge_cells("A30:H30")
+
+width(ws, [22, 48, 14, 18, 14, 14, 14, 18])
+ws.freeze_panes = "A4"
+
+# ========================= 01 MASTER PLAN =========================
+ws1 = wb.create_sheet("01_Master_Plan")
+banner(
+    ws1,
+    "01 — MASTER PLAN (13 Aug night → 16 Aug)",
+    "Mark Status with dropdown. MUST rows are critical. Progress auto-counts on Dashboard.",
+    "A1:J1",
+)
+
+ws1["A3"] = "Filter by Date/Priority using the dropdown arrows in the header row."
+ws1["A3"].font = font_small
+ws1.merge_cells("A3:J3")
+
+headers = ["#", "Date", "Block", "Task", "Category", "Priority", "Mins", "Status", "Resource / File", "My Notes"]
+header_row(ws1, 4, headers)
 
 tasks = [
-    [1, "Thu 13 Aug", "Night 1", "Solve Two Sum (brute + hash map)", "DSA", "MUST", 25, "Not Started", "Day01_02_Arrays/Day01_problems.py"],
-    [2, "Thu 13 Aug", "Night 1", "Solve Contains Duplicate", "DSA", "MUST", 15, "Not Started", ""],
-    [3, "Thu 13 Aug", "Night 1", "Solve Best Time to Buy/Sell Stock", "DSA", "MUST", 20, "Not Started", ""],
-    [4, "Thu 13 Aug", "Night 1", "Solve Valid Parentheses", "DSA", "MUST", 20, "Not Started", "Day07_Stack_Queue/Day07_problems.py"],
-    [5, "Thu 13 Aug", "Night 2", "Speak Intro Version B 3 times (timer)", "Resume", "MUST", 15, "Not Started", "Resume_Prep/INTRO.md or PDF"],
-    [6, "Thu 13 Aug", "Night 2", "Speak Nyay Sahayak: What + RAG + 1 difficulty", "Resume", "MUST", 20, "Not Started", "PROJECT_DEPTH.md"],
-    [7, "Thu 13 Aug", "Night 2", "CS: PK vs FK + INNER vs LEFT JOIN (speak)", "CS Core", "MUST", 20, "Not Started", "CS_Core/DBMS_SQL"],
-    [8, "Thu 13 Aug", "Night 2", "CS: Process vs Thread (speak with example)", "CS Core", "MUST", 10, "Not Started", "CS_Core/OS"],
-    [9, "Fri 14 Aug", "Morning", "Move Zeroes (in-place idea)", "DSA", "MUST", 20, "Not Started", ""],
-    [10, "Fri 14 Aug", "Morning", "Valid Palindrome (two pointers)", "DSA", "MUST", 20, "Not Started", "Day04_Two_Pointers"],
-    [11, "Fri 14 Aug", "Morning", "Longest Substring Without Repeating (try)", "DSA", "MUST", 35, "Not Started", "Day05 - explain if stuck"],
-    [12, "Fri 14 Aug", "Morning", "Reverse Linked List + explain pointers", "DSA", "MUST", 30, "Not Started", "Day08_LinkedList"],
-    [13, "Fri 14 Aug", "Morning", "Binary Search template from memory", "DSA", "MUST", 25, "Not Started", "Day10"],
-    [14, "Fri 14 Aug", "Afternoon", "Max Depth of Binary Tree", "DSA", "MUST", 25, "Not Started", "Day11_Trees"],
-    [15, "Fri 14 Aug", "Afternoon", "Timed drill: 2 Easy problems in 40 min", "DSA Mock", "MUST", 40, "Not Started", "Use phone timer"],
-    [16, "Fri 14 Aug", "Afternoon", "Review fails + rewrite once", "DSA", "MUST", 40, "Not Started", "Write fails in Notes"],
-    [17, "Fri 14 Aug", "Evening", "Intro Version A full (under 2 min)", "Resume", "MUST", 15, "Not Started", ""],
-    [18, "Fri 14 Aug", "Evening", "GeoVerse 1-min pitch + 1 difficulty", "Resume", "SHOULD", 15, "Not Started", ""],
-    [19, "Fri 14 Aug", "Evening", "AWS pipeline 1-min pitch + 1 difficulty", "Resume", "SHOULD", 15, "Not Started", ""],
-    [20, "Fri 14 Aug", "Evening", "HR: Strength + Weakness + Why hire you", "HR", "MUST", 20, "Not Started", "BEHAVIOURAL.md / PDF"],
-    [21, "Fri 14 Aug", "Evening", "CS: ACID (UPI example)", "CS Core", "MUST", 15, "Not Started", ""],
-    [22, "Fri 14 Aug", "Evening", "CS: Deadlock 4 conditions + example", "CS Core", "MUST", 15, "Not Started", ""],
-    [23, "Fri 14 Aug", "Evening", "CS: TCP vs UDP + HTTP vs HTTPS + DNS", "CS Core", "MUST", 20, "Not Started", ""],
-    [24, "Fri 14 Aug", "Evening", "OOP 4 pillars with tiny Python example", "CS Core", "SHOULD", 15, "Not Started", "CS_Core/OOP.md"],
-    [25, "Sat 15 Aug", "Morning", "Re-solve ONLY failed DSA problems", "DSA", "MUST", 90, "Not Started", "No new topics"],
-    [26, "Sat 15 Aug", "Afternoon", "FULL MOCK: Intro -> 2 DSA -> Nyay -> CS -> HR", "Mock", "MUST", 75, "Not Started", "Day14_FULL_MOCK_SCRIPT.md"],
-    [27, "Sat 15 Aug", "Afternoon", "Write top 5 weak answers + fix same day", "Mock", "MUST", 45, "Not Started", ""],
-    [28, "Sat 15 Aug", "Evening", "Flash: CHEATSHEET + CS QUICK_REVISE", "Revise", "MUST", 30, "Not Started", ""],
-    [29, "Sat 15 Aug", "Evening", "Final speak: Intro + Nyay + Why hire you", "Resume", "MUST", 20, "Not Started", ""],
-    [30, "Sat 15 Aug", "Night", "Sleep early (before 11). No new coding.", "Health", "MUST", 0, "Not Started", "Critical"],
-    [31, "Sun 16 Aug", "Morning", "15 min only: Intro + Nyay Sahayak", "Interview Day", "MUST", 15, "Not Started", "No new DSA"],
-    [32, "Sun 16 Aug", "Morning", "Keep water, resume PDF, calm breath", "Interview Day", "MUST", 10, "Not Started", ""],
-    [33, "Sun 16 Aug", "Interview", "Use: Clarify->Example->Brute->Better->Code->Complexity", "Interview Day", "MUST", 0, "Not Started", "Keep in mind"],
+    [1, "Thu 13 Aug", "Night-1", "Solve Two Sum (explain brute + code hash map)", "DSA", "MUST", 25, "Not Started", "Day01_02_Arrays/Day01_problems.py", ""],
+    [2, "Thu 13 Aug", "Night-1", "Solve Contains Duplicate", "DSA", "MUST", 15, "Not Started", "Day01_problems.py", ""],
+    [3, "Thu 13 Aug", "Night-1", "Solve Best Time to Buy and Sell Stock", "DSA", "MUST", 20, "Not Started", "Day01_problems.py", ""],
+    [4, "Thu 13 Aug", "Night-1", "Solve Valid Parentheses (stack)", "DSA", "MUST", 20, "Not Started", "Day07_Stack_Queue/Day07_problems.py", ""],
+    [5, "Thu 13 Aug", "Night-2", "Speak Intro Version B three times with timer", "Resume", "MUST", 15, "Not Started", "Resume_Prep/INTRO.md or PDF", ""],
+    [6, "Thu 13 Aug", "Night-2", "Speak Nyay Sahayak: What + RAG + 1 difficulty", "Resume", "MUST", 20, "Not Started", "Resume_Prep/PROJECT_DEPTH.md", ""],
+    [7, "Thu 13 Aug", "Night-2", "CS speak: Primary key vs Foreign key + JOIN types", "CS", "MUST", 20, "Not Started", "CS_Core/DBMS_SQL", ""],
+    [8, "Thu 13 Aug", "Night-2", "CS speak: Process vs Thread with example", "CS", "MUST", 10, "Not Started", "CS_Core/OS", ""],
+    [9, "Fri 14 Aug", "Morning", "Solve Move Zeroes (in-place two pointer idea)", "DSA", "MUST", 20, "Not Started", "Day01 / arrays", ""],
+    [10, "Fri 14 Aug", "Morning", "Solve Valid Palindrome (two pointers)", "DSA", "MUST", 20, "Not Started", "Day04_Two_Pointers", ""],
+    [11, "Fri 14 Aug", "Morning", "Attempt Longest Substring Without Repeating", "DSA", "MUST", 35, "Not Started", "Day05_Sliding_Window", ""],
+    [12, "Fri 14 Aug", "Morning", "Reverse Linked List + draw prev/curr/next", "DSA", "MUST", 30, "Not Started", "Day08_LinkedList", ""],
+    [13, "Fri 14 Aug", "Morning", "Binary Search template from memory", "DSA", "MUST", 25, "Not Started", "Day10_Sorting_BinarySearch", ""],
+    [14, "Fri 14 Aug", "Afternoon", "Max Depth of Binary Tree", "DSA", "MUST", 25, "Not Started", "Day11_Trees", ""],
+    [15, "Fri 14 Aug", "Afternoon", "Timed drill: 2 Easy problems in 40 minutes", "Mock", "MUST", 40, "Not Started", "Timer on phone", ""],
+    [16, "Fri 14 Aug", "Afternoon", "Rewrite all FAIL problems once", "DSA", "MUST", 40, "Not Started", "List fails in My Notes", ""],
+    [17, "Fri 14 Aug", "Evening", "Speak Intro Version A (under 2 minutes)", "Resume", "MUST", 15, "Not Started", "INTRO.md", ""],
+    [18, "Fri 14 Aug", "Evening", "GeoVerse 1-min pitch + 1 difficulty", "Resume", "SHOULD", 15, "Not Started", "PROJECT_DEPTH.md", ""],
+    [19, "Fri 14 Aug", "Evening", "AWS pipeline 1-min pitch + 1 difficulty", "Resume", "SHOULD", 15, "Not Started", "PROJECT_DEPTH.md", ""],
+    [20, "Fri 14 Aug", "Evening", "HR: Strength + Weakness + Why hire you", "HR", "MUST", 20, "Not Started", "BEHAVIOURAL.md / PDF", ""],
+    [21, "Fri 14 Aug", "Evening", "CS: ACID properties with UPI example", "CS", "MUST", 15, "Not Started", "DBMS_SQL/03", ""],
+    [22, "Fri 14 Aug", "Evening", "CS: Deadlock 4 conditions + real example", "CS", "MUST", 15, "Not Started", "OS/02", ""],
+    [23, "Fri 14 Aug", "Evening", "CS: TCP vs UDP + HTTP vs HTTPS + DNS", "CS", "MUST", 20, "Not Started", "CN notes", ""],
+    [24, "Fri 14 Aug", "Evening", "OOP 4 pillars with tiny Python example", "CS", "SHOULD", 15, "Not Started", "CS_Core/OOP.md", ""],
+    [25, "Sat 15 Aug", "Morning", "Re-solve ONLY failed DSA problems", "DSA", "MUST", 90, "Not Started", "No new topics", ""],
+    [26, "Sat 15 Aug", "Afternoon", "FULL MOCK: Intro → 2 DSA → Nyay → CS → HR", "Mock", "MUST", 75, "Not Started", "Day14_FULL_MOCK_SCRIPT.md", ""],
+    [27, "Sat 15 Aug", "Afternoon", "Write top 5 weak answers and fix same day", "Mock", "MUST", 45, "Not Started", "Notebook / Notes col", ""],
+    [28, "Sat 15 Aug", "Evening", "Flash revise CHEATSHEET + CS QUICK_REVISE", "Revise", "MUST", 30, "Not Started", "CHEATSHEET.md", ""],
+    [29, "Sat 15 Aug", "Evening", "Final speak: Intro + Nyay + Why hire you", "Resume", "MUST", 20, "Not Started", "", ""],
+    [30, "Sat 15 Aug", "Night", "Sleep before 11 PM. No new coding.", "Health", "MUST", 0, "Not Started", "Critical for performance", ""],
+    [31, "Sun 16 Aug", "Morning", "15 min only: Intro + Nyay Sahayak", "Interview", "MUST", 15, "Not Started", "No new DSA", ""],
+    [32, "Sun 16 Aug", "Morning", "Water + resume ready + calm breathing", "Interview", "MUST", 10, "Not Started", "", ""],
+    [33, "Sun 16 Aug", "Interview", "Use formula: Clarify→Example→Brute→Better→Code→Complexity", "Interview", "MUST", 0, "Not Started", "Keep in mind", ""],
 ]
 
 for i, row in enumerate(tasks):
-    r = 4 + i
+    r = 5 + i
     for c, val in enumerate(row, 1):
         cell = ws1.cell(r, c, val)
         cell.border = thin
-        cell.alignment = wrap if c in (4, 9) else center
-        if row[5] == "MUST":
-            ws1.cell(r, 6).fill = must_fill
-        if "16 Aug" in str(row[1]):
-            ws1.cell(r, 2).fill = blue_fill
-        if row[1] == "Sat 15 Aug" and row[2] == "Night":
-            ws1.cell(r, 2).fill = lite_fill
-    ws1.row_dimensions[r].height = 30
+        cell.font = font_body
+        cell.alignment = align_l if c in (4, 9, 10) else align_c
+        if i % 2 == 1:
+            cell.fill = fill_alt
+        if row[5] == "MUST" and c == 6:
+            cell.fill = fill_orange
+            cell.font = Font(name="Calibri", bold=True, size=10, color=ORANGE)
+        if "16 Aug" in row[1] and c == 2:
+            cell.fill = fill_blue
+        if row[1] == "Sat 15 Aug" and row[2] == "Night" and c == 2:
+            cell.fill = fill_yellow
+    ws1.row_dimensions[r].height = 28
 
-add_status_dv(ws1, "H", 3 + len(tasks))
-# fix range - status starts at row 4
-ws1.data_validations.dataValidation[-1].sqref = f"H4:H{3+len(tasks)}"
+dv_list(ws1, "H5:H37", '"Not Started,In Progress,Done"')
+dv_list(ws1, "F5:F37", '"MUST,SHOULD"')
 
-autosize(ws1, [5, 14, 12, 58, 12, 10, 10, 14, 34])
-ws1.freeze_panes = "A4"
-ws1.auto_filter.ref = f"A3:I{3+len(tasks)}"
+# conditional formatting for Status Done
+ws1.conditional_formatting.add(
+    "H5:H37",
+    FormulaRule(formula=['$H5="Done"'], fill=fill_green),
+)
+ws1.conditional_formatting.add(
+    "H5:H37",
+    FormulaRule(formula=['$H5="In Progress"'], fill=fill_yellow),
+)
 
-sum_row = 4 + len(tasks) + 1
-ws1.cell(sum_row, 1, "PROGRESS").font = Font(bold=True, color="0F2C59")
-ws1.cell(sum_row, 2, "Count Done")
-ws1.cell(sum_row, 3, f'=COUNTIF(H4:H{3+len(tasks)},"Done")')
-ws1.cell(sum_row + 1, 2, "Total Tasks")
-ws1.cell(sum_row + 1, 3, len(tasks))
-ws1.cell(sum_row + 2, 2, "Target")
-ws1.cell(sum_row + 2, 3, "At least 25 Done (all MUST preferred)")
+width(ws1, [4, 13, 11, 56, 10, 10, 7, 13, 36, 22])
+ws1.freeze_panes = "A5"
+ws1.auto_filter.ref = "A4:J37"
 
-# -------------------- 02 DSA --------------------
-ws2 = wb.create_sheet("02_DSA_Must_Problems")
-ws2["A1"] = "DSA MUST LIST — For each: Brute idea + Optimal code + Time/Space"
-ws2["A1"].font = title_font
-ws2.merge_cells("A1:H1")
+ws1["A39"] = "QUICK COUNTS"
+ws1["A39"].font = font_bold
+ws1["A40"] = "Done:"
+ws1["B40"] = '=COUNTIF(H5:H37,"Done")'
+ws1["C40"] = "In Progress:"
+ws1["D40"] = '=COUNTIF(H5:H37,"In Progress")'
+ws1["E40"] = "Not Started:"
+ws1["F40"] = '=COUNTIF(H5:H37,"Not Started")'
+ws1["A41"] = "MUST completed:"
+ws1["B41"] = '=COUNTIFS(F5:F37,"MUST",H5:H37,"Done")'
+ws1["C41"] = "MUST total:"
+ws1["D41"] = '=COUNTIF(F5:F37,"MUST")'
+ws1["E41"] = "% MUST done:"
+ws1["F41"] = '=IFERROR(ROUND(B41/D41*100,0)&"%","0%")'
+ws1["F41"].font = Font(name="Calibri", bold=True, size=12, color=TEAL)
 
-h2 = ["#", "Problem", "Pattern", "Brute Idea (write)", "Optimal Idea (write)", "Coded?", "Can Explain T/S?", "Status"]
-for c, h in enumerate(h2, 1):
-    cell = ws2.cell(2, c, h)
-    cell.fill = header_fill
-    cell.font = header_font
-    cell.alignment = center
-    cell.border = thin
+# ========================= 02 DSA =========================
+ws2 = wb.create_sheet("02_DSA_Problems")
+banner(
+    ws2,
+    "02 — DSA MUST PROBLEMS (Brute + Optimal)",
+    "Interview habit: explain brute first, then code optimal, then say Time & Space.",
+    "A1:I1",
+)
+header_row(ws2, 3, ["#", "Problem", "Pattern", "Brute Idea", "Optimal Idea", "Coded?", "Explain T/S?", "Status", "Confidence (1-5)"])
 
 dsa = [
-    [1, "Two Sum", "Hash Map", "All pairs O(n^2)", "Dict value->index O(n)", "No", "No", "Not Started"],
-    [2, "Contains Duplicate", "Hash Set", "Nested loop", "set / len compare", "No", "No", "Not Started"],
-    [3, "Best Time Buy/Sell Stock", "One pass", "All pairs", "Track min price", "No", "No", "Not Started"],
-    [4, "Move Zeroes", "Two pointers", "Extra array", "Write pointer in-place", "No", "No", "Not Started"],
-    [5, "Valid Parentheses", "Stack", "Wrong count-only", "Stack match pairs", "No", "No", "Not Started"],
-    [6, "Valid Palindrome", "Two pointers", "Clean + reverse", "L/R ignore non-alnum", "No", "No", "Not Started"],
-    [7, "Longest Substring No Repeat", "Sliding Window", "All substrings", "Window + last seen", "No", "No", "Not Started"],
-    [8, "Reverse Linked List", "Pointers", "Copy values", "prev/curr/next", "No", "No", "Not Started"],
-    [9, "Binary Search", "Divide & conquer", "Linear scan", "mid cut half O(log n)", "No", "No", "Not Started"],
-    [10, "Max Depth Binary Tree", "DFS recursion", "BFS levels also ok", "1+max(left,right)", "No", "No", "Not Started"],
-    [11, "Majority Element (bonus)", "Hashing", "Count dict", "Counter", "No", "No", "Not Started"],
-    [12, "First Unique Char (bonus)", "Hashing", "Nested scan", "Counter then scan", "No", "No", "Not Started"],
+    [1, "Two Sum", "Hash Map", "Check all pairs O(n²)", "Hash map value→index O(n)", "No", "No", "Not Started", ""],
+    [2, "Contains Duplicate", "Hash Set", "Nested loops", "Use set / compare lengths", "No", "No", "Not Started", ""],
+    [3, "Best Time to Buy/Sell Stock", "One Pass", "Try all buy/sell pairs", "Track min price so far", "No", "No", "Not Started", ""],
+    [4, "Move Zeroes", "Two Pointers", "Build new array", "Write pointer in-place", "No", "No", "Not Started", ""],
+    [5, "Valid Parentheses", "Stack", "Count only (incomplete)", "Stack + matching pairs", "No", "No", "Not Started", ""],
+    [6, "Valid Palindrome", "Two Pointers", "Clean string + reverse", "L/R pointers skip junk", "No", "No", "Not Started", ""],
+    [7, "Longest Substring No Repeat", "Sliding Window", "Generate all substrings", "Window + last-seen map", "No", "No", "Not Started", ""],
+    [8, "Reverse Linked List", "Pointers", "Copy values to array", "prev / curr / next reverse", "No", "No", "Not Started", ""],
+    [9, "Binary Search", "Divide & Conquer", "Linear scan O(n)", "Mid cut half O(log n)", "No", "No", "Not Started", ""],
+    [10, "Max Depth of Binary Tree", "DFS / Recursion", "BFS level count also ok", "1 + max(left, right)", "No", "No", "Not Started", ""],
+    [11, "Majority Element (bonus)", "Hashing", "Count with dict", "Counter / Boyer-Moore optional", "No", "No", "Not Started", ""],
+    [12, "First Unique Character (bonus)", "Hashing", "Nested scan", "Counter then one pass", "No", "No", "Not Started", ""],
 ]
 
 for i, row in enumerate(dsa):
-    r = 3 + i
+    r = 4 + i
     for c, val in enumerate(row, 1):
         cell = ws2.cell(r, c, val)
         cell.border = thin
-        cell.alignment = wrap
-    ws2.row_dimensions[r].height = 36
+        cell.font = font_body
+        cell.alignment = align_l if c in (2, 4, 5) else align_c
+        if i % 2 == 1:
+            cell.fill = fill_alt
+    ws2.row_dimensions[r].height = 34
 
-for col, opts in [("F", '"No,Yes"'), ("G", '"No,Yes"'), ("H", '"Not Started,In Progress,Done"')]:
-    dv = DataValidation(type="list", formula1=opts, allow_blank=True)
-    ws2.add_data_validation(dv)
-    dv.add(f"{col}3:{col}{2+len(dsa)}")
+dv_list(ws2, "F4:F15", '"No,Yes"')
+dv_list(ws2, "G4:G15", '"No,Yes"')
+dv_list(ws2, "H4:H15", '"Not Started,In Progress,Done"')
+dv_list(ws2, "I4:I15", '"1,2,3,4,5"')
+ws2.conditional_formatting.add("H4:H15", FormulaRule(formula=['$H4="Done"'], fill=fill_green))
+ws2.conditional_formatting.add("H4:H15", FormulaRule(formula=['$H4="In Progress"'], fill=fill_yellow))
 
-autosize(ws2, [5, 30, 16, 26, 26, 10, 16, 14])
-ws2.freeze_panes = "A3"
-ws2.cell(16, 1, "INTERVIEW SPEAK TEMPLATE").font = Font(bold=True, color="0F2C59")
-ws2.cell(17, 1, "1 Clarify   2 Example   3 Brute + complexity   4 Optimal + complexity   5 Code   6 Edge cases")
-ws2.merge_cells("A17:H17")
+width(ws2, [4, 30, 16, 28, 30, 10, 13, 13, 14])
+ws2.freeze_panes = "A4"
+ws2.auto_filter.ref = "A3:I15"
 
-# -------------------- 03 Resume HR --------------------
-ws3 = wb.create_sheet("03_Resume_HR_Speak")
-ws3["A1"] = "RESUME + HR — Speak out loud (mark Yes only if without notes)"
-ws3["A1"].font = title_font
-ws3.merge_cells("A1:F1")
+ws2["A17"] = "SPEAK TEMPLATE IN INTERVIEW"
+ws2["A17"].font = font_bold
+ws2["A18"] = "1) Clarify input/output  2) Dry-run example  3) Brute force + complexity  4) Optimal + complexity  5) Code  6) Edge cases"
+ws2["A18"].font = Font(name="Calibri", size=11, color=TEAL)
+ws2.merge_cells("A18:I18")
+ws2["A20"] = "Done count:"
+ws2["B20"] = '=COUNTIF(H4:H15,"Done")'
+ws2["C20"] = "Avg confidence:"
+ws2["D20"] = '=IFERROR(ROUND(AVERAGE(I4:I15),1),"-")'
 
-h3 = ["#", "Item", "What to cover", "Target Time", "Spoken without notes?", "Status"]
-for c, h in enumerate(h3, 1):
-    cell = ws3.cell(2, c, h)
-    cell.fill = header_fill
-    cell.font = header_font
-    cell.alignment = center
-    cell.border = thin
+# ========================= 03 RESUME =========================
+ws3 = wb.create_sheet("03_Resume_HR")
+banner(
+    ws3,
+    "03 — RESUME + HR SPEAKING TRACKER",
+    "Mark Done only when you can speak without reading notes.",
+    "A1:G1",
+)
+header_row(ws3, 3, ["#", "Item", "Must Cover", "Target Time", "Without Notes?", "Status", "Last Practiced"])
 
 resume = [
-    [1, "Intro Version B (short)", "Name, college, CGPA, AWS cert, 3 projects short, role", "60-75 sec", "No", "Not Started"],
-    [2, "Intro Version A (full)", "Family short + projects + hackathons + photography + close", "90-110 sec", "No", "Not Started"],
-    [3, "Nyay Sahayak depth", "RAG flow, ChromaDB+Groq, roles, IPC-BNS, 1 difficulty, next improve", "3 min", "No", "Not Started"],
-    [4, "What is RAG?", "Retrieve then generate; safer than pure LLM", "45 sec", "No", "Not Started"],
-    [5, "GeoVerse pitch", "4 APIs, LLM itinerary, fallback, lazy load", "60 sec", "No", "Not Started"],
-    [6, "AWS Intelligence Loop", "Lambda+Comprehend+DynamoDB+QuickSight + 1 difficulty", "60 sec", "No", "Not Started"],
-    [7, "Strength", "Ship usable products + calm under hackathon pressure", "45 sec", "No", "Not Started"],
-    [8, "Weakness", "Was surface-level; now practice depth (DSA+project followups)", "45 sec", "No", "Not Started"],
-    [9, "Why hire you?", "Learn fast + shipped projects + AWS cert + ownership", "45 sec", "No", "Not Started"],
-    [10, "STAR hardest bug", "Nyay ungrounded answers -> RAG fix -> learning", "60-90 sec", "No", "Not Started"],
-    [11, "Where in 3-5 years?", "Own features end-to-end; later mentor; now fundamentals", "40 sec", "No", "Not Started"],
+    [1, "Intro Version B (short)", "Name, college, CGPA, AWS cert, 3 projects short, role goal", "60–75 sec", "No", "Not Started", ""],
+    [2, "Intro Version A (full)", "Short family + projects + hackathons + photography + close", "90–110 sec", "No", "Not Started", ""],
+    [3, "Nyay Sahayak deep dive", "RAG flow, ChromaDB+Groq, roles, IPC↔BNS, difficulty, next improvement", "3 min", "No", "Not Started", ""],
+    [4, "What is RAG?", "Retrieve relevant docs, then generate; reduces hallucination", "45 sec", "No", "Not Started", ""],
+    [5, "GeoVerse pitch", "Live APIs, AI itinerary, fallback, lazy routes/cache", "60 sec", "No", "Not Started", ""],
+    [6, "AWS Intelligence Loop", "Lambda + Comprehend + DynamoDB + QuickSight + one difficulty", "60 sec", "No", "Not Started", ""],
+    [7, "Strength", "Ship usable products (auth/fallback/RAG) + hackathon calm", "45 sec", "No", "Not Started", ""],
+    [8, "Weakness", "Earlier surface-level; mock said needs depth; now practice depth daily", "45 sec", "No", "Not Started", ""],
+    [9, "Why hire you?", "Learn fast + shipped projects + AWS cert + ownership mindset", "45 sec", "No", "Not Started", ""],
+    [10, "STAR hardest bug", "Nyay ungrounded answers → improved retrieval/RAG → learning", "60–90 sec", "No", "Not Started", ""],
+    [11, "3–5 year vision", "Own features end-to-end; later mentor juniors; now fundamentals", "40 sec", "No", "Not Started", ""],
 ]
 
 for i, row in enumerate(resume):
-    r = 3 + i
+    r = 4 + i
     for c, val in enumerate(row, 1):
         cell = ws3.cell(r, c, val)
         cell.border = thin
-        cell.alignment = wrap
+        cell.font = font_body
+        cell.alignment = align_l if c in (2, 3) else align_c
+        if i % 2 == 1:
+            cell.fill = fill_alt
     ws3.row_dimensions[r].height = 40
 
-for col, opts in [("E", '"No,Yes"'), ("F", '"Not Started,In Progress,Done"')]:
-    dv = DataValidation(type="list", formula1=opts, allow_blank=True)
-    ws3.add_data_validation(dv)
-    dv.add(f"{col}3:{col}{2+len(resume)}")
+dv_list(ws3, "E4:E14", '"No,Yes"')
+dv_list(ws3, "F4:F14", '"Not Started,In Progress,Done"')
+ws3.conditional_formatting.add("F4:F14", FormulaRule(formula=['$F4="Done"'], fill=fill_green))
+width(ws3, [4, 28, 70, 12, 14, 13, 14])
+ws3.freeze_panes = "A4"
 
-autosize(ws3, [5, 28, 72, 12, 22, 14])
-
-# -------------------- 04 CS --------------------
-ws4 = wb.create_sheet("04_CS_Core_Flash")
-ws4["A1"] = "CS CORE — Answer format: Definition + Example + Why companies care"
-ws4["A1"].font = title_font
-ws4.merge_cells("A1:F1")
-
-h4 = ["#", "Subject", "Question", "Keywords for your answer", "Can speak?", "Status"]
-for c, h in enumerate(h4, 1):
-    cell = ws4.cell(2, c, h)
-    cell.fill = header_fill
-    cell.font = header_font
-    cell.alignment = center
-    cell.border = thin
+# ========================= 04 CS =========================
+ws4 = wb.create_sheet("04_CS_Core")
+banner(
+    ws4,
+    "04 — CS CORE FLASH CARDS",
+    "Answer style: Definition + small example + why it matters in real systems.",
+    "A1:G1",
+)
+header_row(ws4, 3, ["#", "Subject", "Question", "Answer Keywords", "Can Speak?", "Status", "Revise Count"])
 
 cs = [
-    [1, "DBMS", "Primary key vs Foreign key", "PK unique row; FK links tables (student_id)", "No", "Not Started"],
-    [2, "DBMS", "INNER JOIN vs LEFT JOIN", "INNER = matches only; LEFT = all left + matches", "No", "Not Started"],
-    [3, "DBMS", "ACID with UPI example", "Atomic Consistency Isolation Durability", "No", "Not Started"],
-    [4, "DBMS", "Index upside/downside", "Faster SELECT; slower writes", "No", "Not Started"],
-    [5, "DBMS", "Normalization simple meaning", "Reduce duplicate/inconsistent data", "No", "Not Started"],
-    [6, "OS", "Process vs Thread", "Process own memory; threads share memory", "No", "Not Started"],
-    [7, "OS", "Deadlock 4 conditions", "ME, hold&wait, no preempt, circular wait", "No", "Not Started"],
-    [8, "OS", "Virtual memory / page fault", "Disk as extra mem; fault loads page", "No", "Not Started"],
-    [9, "CN", "TCP vs UDP", "TCP reliable; UDP fast", "No", "Not Started"],
-    [10, "CN", "HTTP vs HTTPS", "HTTPS = HTTP + TLS", "No", "Not Started"],
-    [11, "CN", "DNS role", "Domain -> IP", "No", "Not Started"],
-    [12, "OOP", "4 pillars + example", "Encapsulation Abstraction Inheritance Polymorphism", "No", "Not Started"],
-    [13, "SE", "Agile vs Waterfall", "Sprints+feedback vs fixed stages", "No", "Not Started"],
-    [14, "SQL", "Write one JOIN + GROUP BY", "Practice from CS_Core/DBMS_SQL/04_sql_practice.md", "No", "Not Started"],
+    [1, "DBMS", "Primary key vs Foreign key", "PK uniquely identifies row; FK links to another table", "No", "Not Started", 0],
+    [2, "DBMS", "INNER JOIN vs LEFT JOIN", "INNER=matches only; LEFT=all left rows + matches", "No", "Not Started", 0],
+    [3, "DBMS", "ACID (with UPI example)", "Atomicity Consistency Isolation Durability", "No", "Not Started", 0],
+    [4, "DBMS", "What is an Index?", "Faster reads; slightly slower writes", "No", "Not Started", 0],
+    [5, "DBMS", "Normalization meaning", "Reduce duplication and update anomalies", "No", "Not Started", 0],
+    [6, "OS", "Process vs Thread", "Process=own memory; Thread=shared memory workers", "No", "Not Started", 0],
+    [7, "OS", "Deadlock 4 conditions", "Mutual exclusion, Hold&Wait, No preemption, Circular wait", "No", "Not Started", 0],
+    [8, "OS", "Virtual memory / page fault", "Use disk as extra memory; fault loads missing page", "No", "Not Started", 0],
+    [9, "CN", "TCP vs UDP", "TCP reliable ordered; UDP faster, less reliable", "No", "Not Started", 0],
+    [10, "CN", "HTTP vs HTTPS", "HTTPS = HTTP + TLS encryption", "No", "Not Started", 0],
+    [11, "CN", "DNS purpose", "Converts domain name to IP address", "No", "Not Started", 0],
+    [12, "OOP", "Four pillars + example", "Encapsulation, Abstraction, Inheritance, Polymorphism", "No", "Not Started", 0],
+    [13, "SE", "Agile vs Waterfall", "Agile=sprints+feedback; Waterfall=sequential stages", "No", "Not Started", 0],
+    [14, "SQL", "Write JOIN + GROUP BY query", "Practice from CS_Core/DBMS_SQL/04_sql_practice.md", "No", "Not Started", 0],
 ]
 
 for i, row in enumerate(cs):
-    r = 3 + i
+    r = 4 + i
     for c, val in enumerate(row, 1):
         cell = ws4.cell(r, c, val)
         cell.border = thin
-        cell.alignment = wrap
-    ws4.row_dimensions[r].height = 34
+        cell.font = font_body
+        cell.alignment = align_l if c in (3, 4) else align_c
+        if i % 2 == 1:
+            cell.fill = fill_alt
+    ws4.row_dimensions[r].height = 32
 
-for col, opts in [("E", '"No,Yes"'), ("F", '"Not Started,In Progress,Done"')]:
-    dv = DataValidation(type="list", formula1=opts, allow_blank=True)
-    ws4.add_data_validation(dv)
-    dv.add(f"{col}3:{col}{2+len(cs)}")
+dv_list(ws4, "E4:E17", '"No,Yes"')
+dv_list(ws4, "F4:F17", '"Not Started,In Progress,Done"')
+ws4.conditional_formatting.add("F4:F17", FormulaRule(formula=['$F4="Done"'], fill=fill_green))
+width(ws4, [4, 10, 36, 58, 12, 13, 12])
+ws4.freeze_panes = "A4"
+ws4.auto_filter.ref = "A3:G17"
 
-autosize(ws4, [5, 10, 36, 58, 12, 14])
-
-# -------------------- 05 Interview day --------------------
-ws5 = wb.create_sheet("05_Interview_Day_16")
-ws5["A1"] = "16 AUG INTERVIEW DAY CHECKLIST"
-ws5["A1"].font = title_font
-ws5.merge_cells("A1:D1")
-
-h5 = ["#", "Checklist", "Status", "Notes"]
-for c, h in enumerate(h5, 1):
-    cell = ws5.cell(2, c, h)
-    cell.fill = header_fill
-    cell.font = header_font
-    cell.alignment = center
-    cell.border = thin
+# ========================= 05 Interview day =========================
+ws5 = wb.create_sheet("05_Interview_Day")
+banner(
+    ws5,
+    "05 — 16 AUG INTERVIEW DAY",
+    "Keep this sheet simple. No new learning. Execute calmly.",
+    "A1:D1",
+)
+header_row(ws5, 3, ["#", "Checklist Item", "Status", "Notes"], fill_teal)
 
 day = [
-    [1, "Sleep well night before", "Not Started", ""],
-    [2, "Light breakfast + water", "Not Started", ""],
-    [3, "Resume PDF/print ready", "Not Started", ""],
-    [4, "Laptop/network ready if online", "Not Started", ""],
-    [5, "15 min revise: Intro + Nyay only (no new coding)", "Not Started", ""],
-    [6, "Reach early / join link 10 min early", "Not Started", ""],
-    [7, "Greet calmly and smile once", "Not Started", ""],
-    [8, "DSA formula: Clarify -> Example -> Brute -> Better -> Code -> T/S", "Not Started", ""],
-    [9, "If stuck: say brute force first, then optimize", "Not Started", ""],
-    [10, "Be honest on any resume metric you are unsure about", "Not Started", ""],
+    [1, "Slept well the night before", "Not Started", ""],
+    [2, "Light breakfast + water bottle ready", "Not Started", ""],
+    [3, "Resume PDF / print ready", "Not Started", ""],
+    [4, "Laptop + internet checked (if online interview)", "Not Started", ""],
+    [5, "15 min revise ONLY: Intro + Nyay Sahayak", "Not Started", "No new coding"],
+    [6, "Reach venue / join link 10 minutes early", "Not Started", ""],
+    [7, "Greet interviewer calmly; smile once", "Not Started", ""],
+    [8, "DSA formula ready in mind: Clarify→Example→Brute→Better→Code→T/S", "Not Started", ""],
+    [9, "If stuck: explain brute force first, then optimize", "Not Started", ""],
+    [10, "Be honest about any resume number you cannot defend", "Not Started", ""],
     [11, "Ask 1 good question at end (team stack / mentorship)", "Not Started", ""],
+    [12, "After interview: write questions asked + mistakes", "Not Started", "Learn for next round"],
 ]
 
 for i, row in enumerate(day):
-    r = 3 + i
+    r = 4 + i
     for c, val in enumerate(row, 1):
         cell = ws5.cell(r, c, val)
         cell.border = thin
-        cell.alignment = wrap
-    ws5.row_dimensions[r].height = 28
+        cell.font = font_body
+        cell.alignment = align_l if c in (2, 4) else align_c
+        if i % 2 == 1:
+            cell.fill = fill_alt
+    ws5.row_dimensions[r].height = 26
 
-dv5 = DataValidation(type="list", formula1='"Not Started,Done"', allow_blank=True)
-ws5.add_data_validation(dv5)
-dv5.add(f"C3:C{2+len(day)}")
-autosize(ws5, [5, 75, 14, 28])
-ws5.cell(16, 1, "AFTER INTERVIEW").font = Font(bold=True, color="0F2C59")
-ws5.cell(17, 1, "Write questions asked + mistakes. One interview is not your whole future. Continue next day.")
-ws5.merge_cells("A17:D17")
+dv_list(ws5, "C4:C15", '"Not Started,Done"')
+ws5.conditional_formatting.add("C4:C15", FormulaRule(formula=['$C4="Done"'], fill=fill_green))
+width(ws5, [5, 78, 14, 28])
+
+ws5["A17"] = "FINAL LINE TO REMEMBER"
+ws5["A17"].font = font_bold
+ws5["A18"] = "You already built real projects. In this interview, show clear thinking. One round does not define your whole career."
+ws5["A18"].font = Font(name="Calibri", italic=True, size=11, color=TEAL)
+ws5.merge_cells("A18:D18")
+
+# ========================= 06 Weak log =========================
+ws6 = wb.create_sheet("06_Weak_Log")
+banner(
+    ws6,
+    "06 — WEAK LOG (write fails here)",
+    "Every fail becomes a revision item. Fix within 24 hours.",
+    "A1:F1",
+)
+header_row(ws6, 3, ["#", "Date", "Topic / Problem", "What went wrong", "Fix / Correct idea", "Fixed?"], fill=PatternFill("solid", fgColor=ORANGE))
+
+for i in range(15):
+    r = 4 + i
+    ws6.cell(r, 1, i + 1).border = thin
+    for c in range(2, 7):
+        cell = ws6.cell(r, c, "")
+        cell.border = thin
+        cell.alignment = align_l
+        if i % 2 == 1:
+            cell.fill = fill_alt
+    ws6.row_dimensions[r].height = 30
+
+dv_list(ws6, "F4:F18", '"No,Yes"')
+width(ws6, [5, 14, 28, 40, 40, 10])
 
 out = Path(r"E:\sems\sem 7\Python DSA\Narendra_Interview_Effort_Tracker_13to16Aug.xlsx")
 wb.save(out)
 print("Saved:", out)
 print("Sheets:", wb.sheetnames)
-print("Master tasks:", len(tasks))
